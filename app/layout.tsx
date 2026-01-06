@@ -14,6 +14,8 @@ export const metadata: Metadata = {
   viewport: {
     width: "device-width",
     initialScale: 1,
+    maximumScale: 5,
+    userScalable: true,
     viewportFit: "cover",
   },
   icons: {
@@ -32,6 +34,15 @@ export const metadata: Metadata = {
       },
     ],
     apple: "/apple-icon.png",
+  },
+  // Enhanced for AR and mobile support
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "AR Viewer",
+  },
+  formatDetection: {
+    telephone: false,
   },
 }
 
