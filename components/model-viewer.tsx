@@ -125,7 +125,11 @@ export default function ModelViewer() {
 
   return (
     <div className="w-full h-full flex flex-col relative bg-white safe-area-inset">
-      {/* Main Viewer - Fully responsive container with mobile-adjusted height */}
+      {/* 
+        Main Viewer - Fully responsive container with mobile-adjusted height
+        Mobile bottom margin (120px) provides space for absolutely positioned controls:
+        - 44px min button height + 16px gaps + 60px for multi-row layout
+      */}
       <div className="flex-1 relative overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100 sm:mb-0 mb-[120px]">
         {modelSrc ? (
           <model-viewer
@@ -217,10 +221,10 @@ export default function ModelViewer() {
           <button
             onClick={handleARClick}
             className="bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white px-6 sm:px-6 py-3 sm:py-3 rounded-lg transition-all shadow-lg font-medium text-base sm:text-base whitespace-nowrap min-h-[44px]"
-            title={isARSupported ? "View in AR - Pinch to scale, rotate with two fingers" : "View in AR - Pinch to scale, rotate with two fingers"}
+            title="View in AR - Pinch to scale, rotate with two fingers"
             aria-label="Open augmented reality viewer with gesture controls"
           >
-            {isARSupported ? "View in AR" : "View in AR"}
+            View in AR
           </button>
         )}
       </div>
