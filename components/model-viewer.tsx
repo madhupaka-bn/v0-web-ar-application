@@ -50,17 +50,47 @@ export default function ModelViewer() {
   /**
    * Activate AR mode
    * Triggers AR viewing experience using available AR mode (WebXR, Scene Viewer, or Quick Look)
+   * Provides user feedback and handles errors gracefully
    */
-  const handleARClick = () => {
+  const handleARClick = async () => {
     const viewer = viewerRef.current
-    if (viewer) {
-      console.log("[v0] Activating AR")
-      try {
-        viewer.activateAR()
-      } catch (error) {
-        console.error("[v0] AR activation failed:", error)
-        alert("AR is not available on this device. Please try on a mobile device with AR support.")
+    if (!viewer) {
+      console.error("[v0] Model viewer not initialized")
+      return
+    }
+
+    console.log("[v0] Activating AR")
+    
+    try {
+      // Check if AR is available
+      if (!viewer.canActivateAR) {
+        console.warn("[v0] AR not available on this device")
+        alert(
+          "AR is not available on this device.\n\n" +
+          "AR requires:\n" +
+          "• iOS 12+ with Safari (uses Quick Look)\n" +
+          "• Android 7+ with Chrome/Samsung Internet (uses Scene Viewer)\n" +
+          "• A device with AR capabilities (ARCore or ARKit)"
+        )
+        return
       }
+
+      // Activate AR mode
+      await viewer.activateAR()
+      console.log("[v0] AR activated successfully")
+    } catch (error) {
+      console.error("[v0] AR activation failed:", error)
+      
+      // Provide helpful error message
+      const errorMessage = error instanceof Error ? error.message : String(error)
+      alert(
+        "Failed to launch AR viewer.\n\n" +
+        "Please ensure:\n" +
+        "• Your device supports AR (ARCore or ARKit)\n" +
+        "• You're using a compatible browser\n" +
+        "• Camera permissions are granted\n\n" +
+        `Error: ${errorMessage}`
+      )
     }
   }
 
@@ -87,13 +117,14 @@ export default function ModelViewer() {
   }
 
   return (
-    <div className="w-full h-full flex flex-col relative bg-white">
+    <div className="w-full h-full flex flex-col relative bg-white safe-area-inset">
       {/* Main Viewer - Fully responsive container */}
       <div className="flex-1 relative overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100">
         {modelSrc ? (
           <model-viewer
             ref={viewerRef}
             src={modelSrc}
+            ios-src={modelSrc}
             alt="3D Model"
             auto-rotate
             camera-controls
@@ -102,6 +133,8 @@ export default function ModelViewer() {
             ar
             ar-modes="webxr scene-viewer quick-look"
             ar-scale="auto"
+            ar-placement="floor"
+            xr-environment
             environment-image="neutral"
             exposure="1"
             shadow-intensity="1"
@@ -127,28 +160,28 @@ export default function ModelViewer() {
       </div>
 
       {/* Responsive Controls - Adapts layout for different screen sizes */}
-      <div className="absolute bottom-4 sm:bottom-6 left-4 sm:left-6 right-4 sm:right-6 flex flex-col sm:flex-row justify-between items-stretch sm:items-end gap-3">
+      <div className="absolute bottom-4 sm:bottom-6 left-4 sm:left-6 right-4 sm:right-6 flex flex-col sm:flex-row justify-between items-stretch sm:items-end gap-3 pb-safe">
         <div className="flex flex-wrap gap-2 sm:gap-3">
           {/* Reset View Button */}
           <button
             onClick={handleResetView}
             disabled={!modelSrc}
-            className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white p-2.5 sm:p-3 rounded-lg transition-all shadow-lg flex-shrink-0"
+            className="bg-blue-600 hover:bg-blue-700 active:bg-blue-800 disabled:bg-gray-400 disabled:cursor-not-allowed text-white p-3 sm:p-3 rounded-lg transition-all shadow-lg flex-shrink-0 min-h-[44px] min-w-[44px] flex items-center justify-center"
             title="Reset View"
             aria-label="Reset camera view"
           >
-            <RotateCcw className="w-4 h-4 sm:w-5 sm:h-5" />
+            <RotateCcw className="w-5 h-5 sm:w-5 sm:h-5" />
           </button>
 
           {/* Upload Button */}
           <button
             onClick={() => fileInputRef.current?.click()}
-            className="bg-blue-600 hover:bg-blue-700 text-white p-2.5 sm:p-3 rounded-lg transition-all shadow-lg flex items-center gap-2 flex-shrink-0"
+            className="bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white px-4 py-3 sm:p-3 rounded-lg transition-all shadow-lg flex items-center gap-2 flex-shrink-0 min-h-[44px]"
             title="Upload 3D Model"
             aria-label="Upload 3D model file"
           >
-            <Upload className="w-4 h-4 sm:w-5 sm:h-5" />
-            <span className="text-xs sm:text-sm font-medium">Upload</span>
+            <Upload className="w-5 h-5 sm:w-5 sm:h-5" />
+            <span className="text-sm sm:text-sm font-medium">Upload</span>
           </button>
           <input
             ref={fileInputRef}
@@ -160,27 +193,27 @@ export default function ModelViewer() {
           />
 
           {/* File name display - responsive text sizing */}
-          <div className="text-xs sm:text-sm text-gray-700 bg-white/90 backdrop-blur px-2 sm:px-3 py-2 rounded-lg flex items-center flex-1 sm:flex-initial min-w-0">
+          <div className="text-sm sm:text-sm text-gray-700 bg-white/90 backdrop-blur px-3 sm:px-3 py-2.5 rounded-lg flex items-center flex-1 sm:flex-initial min-w-0 min-h-[44px]">
             <span className="truncate">{fileName}</span>
           </div>
         </div>
 
-        {/* AR Button - Only shown when model is loaded and AR is supported */}
+        {/* AR Button - Only shown when model is loaded */}
         {modelSrc && (
           <button
             onClick={handleARClick}
-            className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg transition-all shadow-lg font-medium text-sm sm:text-base whitespace-nowrap"
-            title={isARSupported ? "View in AR" : "AR not supported on this device"}
+            className="bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white px-6 sm:px-6 py-3 sm:py-3 rounded-lg transition-all shadow-lg font-medium text-base sm:text-base whitespace-nowrap min-h-[44px]"
+            title={isARSupported ? "View in AR" : "Tap to view in AR"}
             aria-label="Open augmented reality viewer"
           >
-            {isARSupported ? "View in AR" : "Open AR"}
+            {isARSupported ? "View in AR" : "View in AR"}
           </button>
         )}
       </div>
 
       {/* Instructions - responsive positioning and text sizing */}
       {modelSrc && (
-        <div className="absolute top-3 sm:top-4 right-3 sm:right-4 text-xs text-gray-700 bg-white/90 backdrop-blur px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg">
+        <div className="absolute top-3 sm:top-4 right-3 sm:right-4 text-xs sm:text-xs text-gray-700 bg-white/90 backdrop-blur px-3 sm:px-3 py-2 sm:py-2 rounded-lg shadow-md pt-safe">
           <span className="hidden sm:inline">Drag to rotate • Scroll to zoom</span>
           <span className="sm:hidden">Touch to interact</span>
         </div>
