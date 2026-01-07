@@ -222,7 +222,7 @@ export default function ModelViewer() {
             onClick={handleARClick}
             className="bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white px-6 sm:px-6 py-3 sm:py-3 rounded-lg transition-all shadow-lg font-medium text-base sm:text-base whitespace-nowrap min-h-[44px]"
             title="View in AR - Pinch to scale, rotate with two fingers"
-            aria-label="Open augmented reality viewer with gesture controls"
+            aria-label="View in AR - Pinch to scale, rotate with two fingers"
           >
             View in AR
           </button>
