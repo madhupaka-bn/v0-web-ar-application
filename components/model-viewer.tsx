@@ -124,6 +124,8 @@ export default function ModelViewer() {
           <model-viewer
             ref={viewerRef}
             src={modelSrc}
+            // Note: ios-src ideally should point to .usdz for optimal iOS AR,
+            // but Quick Look can also handle .glb files for basic AR viewing
             ios-src={modelSrc}
             alt="3D Model"
             auto-rotate
