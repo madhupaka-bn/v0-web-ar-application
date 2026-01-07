@@ -50,6 +50,13 @@ export default function ModelViewer() {
   /**
    * Activate AR mode
    * Triggers AR viewing experience using available AR mode (WebXR, Scene Viewer, or Quick Look)
+   * 
+   * Enhanced AR Configuration:
+   * - ar-placement="floor": Ensures models snap to detected horizontal surfaces (floor, desk, etc.)
+   * - interaction-policy="always-allow": Enables pinch-to-scale, rotate, and position controls in AR
+   * - interaction-prompt: Provides visual cues for users to interact with the model
+   * - xr-environment: Uses WebXR for plane detection and hit-testing on supported browsers
+   * 
    * Provides user feedback and handles errors gracefully
    */
   const handleARClick = async () => {
@@ -118,8 +125,8 @@ export default function ModelViewer() {
 
   return (
     <div className="w-full h-full flex flex-col relative bg-white safe-area-inset">
-      {/* Main Viewer - Fully responsive container */}
-      <div className="flex-1 relative overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100">
+      {/* Main Viewer - Fully responsive container with mobile-adjusted height */}
+      <div className="flex-1 relative overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100 sm:mb-0 mb-[120px]">
         {modelSrc ? (
           <model-viewer
             ref={viewerRef}
@@ -132,11 +139,16 @@ export default function ModelViewer() {
             camera-controls
             touch-action="pan-y"
             disable-zoom={false}
+            enable-pan
             ar
             ar-modes="webxr scene-viewer quick-look"
             ar-scale="auto"
             ar-placement="floor"
             xr-environment
+            interaction-prompt="auto"
+            interaction-prompt-threshold="0"
+            interaction-prompt-style="basic"
+            interaction-policy="always-allow"
             environment-image="neutral"
             exposure="1"
             shadow-intensity="1"
