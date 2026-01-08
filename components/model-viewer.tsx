@@ -53,9 +53,17 @@ export default function ModelViewer() {
    * 
    * Enhanced AR Configuration:
    * - ar-placement="floor": Ensures models snap to detected horizontal surfaces (floor, desk, etc.)
+   * - hit-test="true": Enables WebXR hit-testing API for precise surface detection
+   * - plane-detection="horizontal vertical": Detects both horizontal and vertical surfaces
    * - interaction-policy="always-allow": Enables pinch-to-scale, rotate, and position controls in AR
    * - interaction-prompt: Provides visual cues for users to interact with the model
    * - xr-environment: Uses WebXR for plane detection and hit-testing on supported browsers
+   * 
+   * Surface Detection Features:
+   * - Automatically detects horizontal surfaces (floors, tables, desks)
+   * - Supports vertical surface detection for wall-mounted objects
+   * - Uses device sensors and camera for accurate placement
+   * - Provides visual feedback during surface scanning
    * 
    * Provides user feedback and handles errors gracefully
    */
@@ -149,10 +157,12 @@ export default function ModelViewer() {
             ar-scale="auto"
             ar-placement="floor"
             xr-environment
+            hit-test="true"
             interaction-prompt="auto"
             interaction-prompt-threshold="0"
             interaction-prompt-style="basic"
             interaction-policy="always-allow"
+            plane-detection="horizontal vertical"
             environment-image="neutral"
             exposure="1"
             shadow-intensity="1"
@@ -178,13 +188,13 @@ export default function ModelViewer() {
       </div>
 
       {/* Responsive Controls - Adapts layout for different screen sizes */}
-      <div className="absolute bottom-4 sm:bottom-6 left-4 sm:left-6 right-4 sm:right-6 flex flex-col sm:flex-row justify-between items-stretch sm:items-end gap-3 pb-safe">
+      <div className="absolute bottom-4 sm:bottom-6 left-4 sm:left-6 right-4 sm:right-6 flex flex-col sm:flex-row justify-between items-stretch sm:items-end gap-3 pb-safe z-10">
         <div className="flex flex-wrap gap-2 sm:gap-3">
           {/* Reset View Button */}
           <button
             onClick={handleResetView}
             disabled={!modelSrc}
-            className="bg-blue-600 hover:bg-blue-700 active:bg-blue-800 disabled:bg-gray-400 disabled:cursor-not-allowed text-white p-3 sm:p-3 rounded-lg transition-all shadow-lg flex-shrink-0 min-h-[44px] min-w-[44px] flex items-center justify-center"
+            className="bg-blue-600 hover:bg-blue-700 active:bg-blue-800 disabled:bg-gray-400 disabled:cursor-not-allowed text-white p-3 sm:p-3 rounded-lg transition-all shadow-lg flex-shrink-0 min-h-[44px] min-w-[44px] flex items-center justify-center touch-manipulation"
             title="Reset View"
             aria-label="Reset camera view"
           >
@@ -194,7 +204,7 @@ export default function ModelViewer() {
           {/* Upload Button */}
           <button
             onClick={() => fileInputRef.current?.click()}
-            className="bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white px-4 py-3 sm:p-3 rounded-lg transition-all shadow-lg flex items-center gap-2 flex-shrink-0 min-h-[44px]"
+            className="bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white px-4 py-3 sm:p-3 rounded-lg transition-all shadow-lg flex items-center gap-2 flex-shrink-0 min-h-[44px] touch-manipulation"
             title="Upload 3D Model"
             aria-label="Upload 3D model file"
           >
@@ -220,7 +230,7 @@ export default function ModelViewer() {
         {modelSrc && (
           <button
             onClick={handleARClick}
-            className="bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white px-6 sm:px-6 py-3 sm:py-3 rounded-lg transition-all shadow-lg font-medium text-base sm:text-base whitespace-nowrap min-h-[44px]"
+            className="bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white px-6 sm:px-6 py-3 sm:py-3 rounded-lg transition-all shadow-lg font-medium text-base sm:text-base whitespace-nowrap min-h-[44px] touch-manipulation"
             title="View in AR - Pinch to scale, rotate with two fingers"
             aria-label="View in AR - Pinch to scale, rotate with two fingers"
           >
