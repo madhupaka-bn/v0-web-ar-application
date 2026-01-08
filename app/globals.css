@@ -187,10 +187,9 @@
   
   /* Ensure full-height experience on mobile */
   body {
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
+    height: 100vh;
+    height: 100dvh; /* Dynamic viewport height for better mobile support */
+    overflow-x: hidden;
   }
 }
 
@@ -203,18 +202,19 @@
 
 /**
  * Additional breakpoints for better mobile responsiveness
+ * Uses clamp() for accessible font scaling that respects user preferences
  */
 @media (max-width: 375px) {
   /* Extra small phones (e.g., iPhone SE) */
   html {
-    font-size: 14px;
+    font-size: clamp(14px, 3.5vw, 16px);
   }
 }
 
 @media (min-width: 376px) and (max-width: 428px) {
   /* Standard phones (e.g., iPhone 12/13/14) */
   html {
-    font-size: 16px;
+    font-size: clamp(15px, 4vw, 16px);
   }
 }
 
@@ -227,8 +227,8 @@
     padding: 0.5rem;
   }
   
-  /* Reduce header height in landscape */
-  header {
+  /* Reduce header height in landscape for mobile screens */
+  header > div {
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
   }
