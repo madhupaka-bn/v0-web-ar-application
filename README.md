@@ -24,12 +24,23 @@ Any changes you make to your deployed app will be automatically pushed to this r
 - **WebXR**: Progressive web AR for compatible browsers
 - Real-world model placement with automatic scaling
 - Floor placement for realistic AR positioning
+- **Enhanced Surface Detection**: 
+  - Hit-testing API for precise surface detection
+  - Horizontal and vertical plane detection
+  - Visual feedback during surface scanning
+  - Optimized for various lighting conditions
 
 ### 🎨 Responsive Design
 - **Mobile-First**: Optimized for touch interactions
 - **Safe Area Support**: Respects device notches and system UI
 - **Touch Targets**: Minimum 44px buttons following accessibility guidelines
 - **Adaptive Layout**: Automatically adjusts for portrait and landscape orientations
+- **Device-Specific Optimizations**: 
+  - Extra small phones (iPhone SE and similar)
+  - Standard phones (iPhone 12/13/14 and similar)
+  - Tablets and larger devices
+- **Touch Optimization**: Fast-tap response with touch-action manipulation
+- **Viewport Optimization**: Enhanced viewport configuration for AR compatibility
 
 ## How to Use AR
 

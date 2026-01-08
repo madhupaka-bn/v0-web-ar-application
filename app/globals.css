@@ -165,6 +165,15 @@
   model-viewer::part(default-progress-bar-track) {
     background-color: rgba(59, 130, 246, 0.8);
   }
+  
+  /**
+   * Touch manipulation optimization
+   * Improves button response time on mobile devices
+   */
+  .touch-manipulation {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
 }
 
 /**
@@ -174,6 +183,13 @@
   /* Optimize for mobile devices */
   model-viewer {
     --poster-color: transparent;
+  }
+  
+  /* Ensure full-height experience on mobile */
+  body {
+    height: 100vh;
+    height: 100dvh; /* Dynamic viewport height for better mobile support */
+    overflow-x: hidden;
   }
 }
 
@@ -185,11 +201,35 @@
 }
 
 /**
+ * Additional breakpoints for better mobile responsiveness
+ * Uses clamp() for accessible font scaling that respects user preferences
+ */
+@media (max-width: 375px) {
+  /* Extra small phones (e.g., iPhone SE) */
+  html {
+    font-size: clamp(14px, 3.5vw, 16px);
+  }
+}
+
+@media (min-width: 376px) and (max-width: 428px) {
+  /* Standard phones (e.g., iPhone 12/13/14) */
+  html {
+    font-size: clamp(15px, 4vw, 16px);
+  }
+}
+
+/**
  * Landscape orientation adjustments for mobile devices
  */
 @media (max-height: 500px) and (orientation: landscape) {
   /* Adjust UI spacing in landscape mode on mobile */
   .model-viewer-controls {
     padding: 0.5rem;
+  }
+  
+  /* Reduce header height in landscape for mobile screens */
+  header > div {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
   }
 }
